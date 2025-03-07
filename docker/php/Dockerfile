@@ -1,4 +1,4 @@
-FROM php:8-fpm-alpine
+FROM php:8.1-fpm-alpine
 
 RUN apk --no-cache add --virtual .build-deps $PHPIZE_DEPS && docker-php-ext-install mysqli pdo pdo_mysql
 

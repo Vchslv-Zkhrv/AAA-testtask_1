@@ -1,0 +1,192 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    padding: 24px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+nav {
+    margin-bottom: 24px;
+}
+
+input, select {
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    background-color: #f0f0f0;
+}
+
+select {
+    -moz-appearance:none; /* Firefox */
+    -webkit-appearance:none; /* Safari and Chrome */
+    appearance:none;
+}
+
+button {
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    background-color: #f7c9b7;
+}
+
+.rules-set {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 8px;
+    max-width: 800px;
+}
+
+fieldset {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid lightgrey;
+    border-radius: 6px;
+    padding: 8px;
+    gap: 8px;
+}
+
+.inputs-variant {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
+
+#create-form-error {
+    color: red;
+}
+
+#create-form-add-button {
+    background-color: #9ee3ff;
+}
+
+#create-form-add-button[disabled] {
+    background-color: #ccf0ff;
+}
+
+#create-form-submit-button {
+    background-color: #cdf7a3;
+}
+
+#create-form-submit-button[disabled] {
+    background-color: #eeffde;
+}
+
+#create-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top; 48px;
+}
+
+
+#create-form-main-inputs {
+    display: flex;
+    flex-direction: row;
+    border: none;
+    padding: 0;
+}
+
+hr {
+    margin-top: 8px;
+    margin-bottom: 24px;
+}
+
+.filter-rules {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.filter-rule {
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 8px;
+    width: fit-content;
+    margin-right: auto;
+}
+
+.filter-rule-name {
+    font-size: 16px;
+}
+
+.filter-rule-rules {
+    margin-top: 6px;
+}
+
+.filter-rule-rule {
+    background-color: #f0f0f0;
+    font-size: 14px;
+    padding: 3px;
+    border-radius: 3px;
+}
+
+.hotels {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 12px;
+}
+
+.hotel {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.hotel-tags {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-left: 24px;
+    gap: 8px;
+}
+
+.hotel-tag {
+    background-color: #f0f0f0;
+    font-size: 14px;
+    padding: 3px;
+    border-radius: 3px;
+}
+
+table {
+    font-size: 14px;
+    padding-top: 12px;
+}
+
+th {
+    background-color: lightgray;
+    padding: 6px;
+}
+
+td {
+    background-color: #f0f0f0;
+    padding: 6px;
+}
+
+.filter-rule-header {
+    display: flex;
+    flex-direction: row;
+}
+
+.filter-rule-delete-button {
+    font-size: 8px;
+    padding: 4px;
+    margin-right: 8px;
+}
