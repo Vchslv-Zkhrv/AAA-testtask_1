@@ -4,7 +4,6 @@ namespace Entity;
 
 include '_rules.php';
 
-
 /**
  * Классы - обертки над таблицами
  * Можно сделать более функциональными, но для нашей задачи достаточно и этого
@@ -23,9 +22,12 @@ abstract class Entity
      * @return static
      */
     abstract public static function fromArray(array $array): static;
+    // у меня есть своя библиотека для работы со структурами: https://github.com/Vchslv-Zkhrv/Schemantic
+    // в ней есть реализация универсальных методов fromArray, toArray и т.д.
+    // тут я намеренно отказался от зависимостей
 
     /**
-     * Прочитать массив массивов как массив сущностей
+     * Прочитать массив массивов (например, ответ от базы данных) как массив сущностей
      *
      * @param array[] $array
      * @return static[]
@@ -264,6 +266,9 @@ class FilterRule extends Entity
 }
 
 
+// короткие названия всегда лучше имени класса, так как:
+// 1. Класс и его расположение может измениться
+// 2. Фронтенд не должен знать о структуре кода на беке
 const ENTITIES = [
     'companies' => Company::class,
     'agencies' => Agency::class,

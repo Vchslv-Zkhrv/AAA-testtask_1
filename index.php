@@ -13,6 +13,9 @@ echo "<h1>Главная</h1>";
 echo "<hr/>";
 
 
+// Точка входа
+
+
 if (!isset($_GET['agency'])) {
     echo "Выберите агенство:";
     echo '<ul>';
@@ -24,6 +27,9 @@ if (!isset($_GET['agency'])) {
     echo '</ul>';
     die();
 }
+
+
+// Информация об агенстве. Тут отображаются результаты вычисления правил отбора отелей
 
 
 $agencyId = (int)$_GET['agency'];
@@ -41,9 +47,15 @@ $allRules = \Entity\FilterRule::fromArrayMultiple(
     $conn->query("SELECT * FROM `filter_rule` WHERE agency_id = $agencyId")->fetchAll()
 );
 
+
+/**
+ * @var array<int,int[]> {правило: отели}
+ */
 $rulesMatching = [];
+
+
 foreach ($allRules as $key => $filterRule) {
-    $query =$filterRule->value->buildQuery();
+    $query = $filterRule->value->buildQuery();
     $rulesMatching[$key] = array_map(
         fn ($row) => $row['id'],
         $conn->query($query)->fetchAll()
@@ -63,6 +75,7 @@ if (!isset($_GET['hotel'])) {
         echo "<a href=\"/?agency=$agencyId&hotel=$hotel->id\"><strong>$hotel->id.</strong> $hotel->name</a>";
         echo "<div class=\"hotel-tags\">";
 
+        // ищем правила, которым соответсвует данный отель
         $hotelTags = array_filter(
             $rulesMatching,
             fn ($v, $k) => in_array($hotel->id, $v),
@@ -78,6 +91,9 @@ if (!isset($_GET['hotel'])) {
     echo '</ul>';
     die();
 }
+
+
+// Детальная информация по отелю
 
 
 $hotelId = (int)$_GET['hotel'];

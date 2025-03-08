@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Общие методы и констаты
+ */
+
+// Функции нужно отделять от классов, а лучше - объединять в статические классы
+
 define('MYSQL_HOST', 'mysql');
 define('MYSQL_USER', $_ENV['MYSQL_USER']);
 define('MYSQL_PASSWORD', $_ENV['MYSQL_PASSWORD']);

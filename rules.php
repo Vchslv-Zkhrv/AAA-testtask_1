@@ -8,6 +8,7 @@ define('HOME', '<a href="/">На главную</a>');
 define('RULES', '<a href="/rules.php">Все правила</a>');
 
 
+// если агенство не указано - на главную
 if (!isset($_GET['agency'])) {
     header("Location: /", true, 301);
     die();
@@ -39,6 +40,9 @@ echo "<li><a href=\"/\">На главную</a></li>";
 echo "</ul></nav>";
 
 
+/**
+ * Нарисовать HTML правила
+ */
 function makeRule(\Entity\FilterRule $filterRule): string
 {
     $sql = "<div class=\"filter-rule\" id=\"filter-rule-$filterRule->id\">";
@@ -63,10 +67,10 @@ function makeRule(\Entity\FilterRule $filterRule): string
     return $sql;
 }
 
+
 $allRules = \Entity\FilterRule::fromArrayMultiple(
     $conn->query("SELECT * FROM `filter_rule` WHERE agency_id = $agencyId")->fetchAll()
 );
-
 
 
 echo "<ul class=\"filter-rules\">";
@@ -75,7 +79,9 @@ foreach ($allRules as $filterRule) {
 }
 echo "</ul>";
 
+
 echo "<hr/>";
+
 
 echo "
 <form action=\"rules.php?agency=$agencyId\" method=\"POST\" class=\"rules-set\" id=\"create-form\">

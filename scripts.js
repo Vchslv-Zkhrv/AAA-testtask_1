@@ -1,3 +1,6 @@
+/**
+ * Отправить jRPC - запрос
+ */
 async function rpc(method, params) {
      return await fetch("rpc.php", {
         method: 'POST',
@@ -12,6 +15,9 @@ async function rpc(method, params) {
 }
 
 
+/**
+ * Распарсить значения из формы создания правила
+ */
 function getCreateFormValues() {
     const orders = Array.from(
         document.querySelectorAll('.rule-inputs').values().filter(
@@ -49,6 +55,9 @@ function getCreateFormValues() {
 }
 
 
+/**
+ * Обновляет значение аттрибута `disabled` для кнопки `Создать правило`
+ */
 function checkSubmitButtonAwailable() {
     if (document.getElementById('create-form-name').value != '' && getCreateFormValues().length > 0) {
         document.getElementById('create-form-submit-button').removeAttribute('disabled');
@@ -56,6 +65,26 @@ function checkSubmitButtonAwailable() {
         document.getElementById('create-form-submit-button').setAttribute('disabled', 1);
     }
 }
+
+
+/**
+ * Генерирует HTML код инпута для создания правила
+ */
+function buildInputs(operator, value, order) {
+    return `
+        <div class="inputs-variant" data-order="${order}" id="inputs-variant-${order}">
+            <select name="operator-${order}" data-order="${order}" id="create-form-${order}-operator">
+                ` + operator.map((o) => `<option value="${o.id}">${o.text}</option>`).join('') + `
+            </select>
+            <select name="value-${order}" data-order="${order}" id="create-form-${order}-value">
+                ` + value.map((v) => `<option value="${v.id}" `
+                    + Object.entries(v.meta).map((m) => `data-${m[0]}="${m[1]}"`).join(' ')
+                + ` >${v.text}</option>`).join('') + `
+            </select>
+        </div>
+    `;
+}
+
 
 function onCreateFormNameChange(event) {
     checkSubmitButtonAwailable();
@@ -156,22 +185,6 @@ async function onCreateFormAddButtonClick(event) {
 }
 
 
-function buildInputs(operator, value, order) {
-    return `
-        <div class="inputs-variant" data-order="${order}" id="inputs-variant-${order}">
-            <select name="operator-${order}" data-order="${order}" id="create-form-${order}-operator">
-                ` + operator.map((o) => `<option value="${o.id}">${o.text}</option>`).join('') + `
-            </select>
-            <select name="value-${order}" data-order="${order}" id="create-form-${order}-value">
-                ` + value.map((v) => `<option value="${v.id}" `
-                    + Object.entries(v.meta).map((m) => `data-${m[0]}="${m[1]}"`).join(' ')
-                + ` >${v.text}</option>`).join('') + `
-            </select>
-        </div>
-    `;
-}
-
-
 async function onCreateFormNewFieldsetTypeSelect(event) {
     event.preventDefault();
     const order = event.target.getAttribute('data-order');
@@ -190,6 +203,7 @@ async function onCreateFormNewFieldsetTypeSelect(event) {
 
     checkSubmitButtonAwailable();
 }
+
 
 async function onFilterRuleDeleteButtonClick(event) {
     const ruleId = event.target.getAttribute('data-id');

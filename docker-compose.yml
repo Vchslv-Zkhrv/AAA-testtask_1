@@ -1,6 +1,8 @@
 version: '3'
 name: "php-test"
 
+# порты поменял, потому что у меня уже заканчиваются свободные на этом ПК
+
 services:
   mysql:
     image: mysql:8

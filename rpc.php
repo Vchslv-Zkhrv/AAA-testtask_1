@@ -2,6 +2,10 @@
 
 namespace RPC;
 
+/**
+ * Обработка ajax-запросов
+ */
+
 define('RPC_BODY', json_decode(file_get_contents('php://input'), true));
 define('RPC_METHOD', RPC_BODY['method']);
 define('RPC_PARAMS', RPC_BODY['params']);
@@ -96,7 +100,7 @@ $function = "\RPC\\" . RPC_METHOD;
 
 if (function_exists($function)) {
     try {
-        echo json_encode($function(), JSON_THROW_ON_ERROR|JSON_PRETTY_PRINT);
+        echo json_encode($function(), JSON_THROW_ON_ERROR);
         die();
     } catch (\Throwable $e) {
         http_response_code(500);

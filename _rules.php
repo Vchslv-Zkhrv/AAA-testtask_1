@@ -2,15 +2,51 @@
 
 namespace Rule;
 
+/**
+ * Правила отбора отелей
+ */
 
+
+/**
+ * Допустимые операторы
+ */
 enum Operator
 {
+    /**
+     * Equals `=`
+     */
     case eq;
+
+    /**
+     * Not Equals `!=`
+     */
     case nq;
+
+    /**
+     * Lower Than `<`
+     */
     case lt;
+
+    /**
+     * Greater Than `>`
+     */
     case gt;
+
+    /**
+     * Greater than or Equals to `>=`
+     */
+    // case ge;
+
+    /**
+     * Lower than or Equals to `<=`
+     */
+    // case le;
 }
 
+
+/**
+ * Название оператора на русском
+ */
 const OPERATOR_DESCRIPTION = [
     'eq' => 'равно',
     'nq' => 'не равно',
@@ -19,6 +55,9 @@ const OPERATOR_DESCRIPTION = [
 ];
 
 
+/**
+ * Запись оператора в синтаксисе MySQL
+ */
 const OPERATOR_FORMULA = [
     'eq' => '=',
     'nq' => '!=',
@@ -27,6 +66,9 @@ const OPERATOR_FORMULA = [
 ];
 
 
+/**
+ * Объект-обертка над JSON объектом
+ */
 abstract class JsonObject implements \JsonSerializable
 {
     /**
@@ -74,10 +116,13 @@ abstract class JsonObject implements \JsonSerializable
 }
 
 
+/**
+ * Допустимые значения для правила
+ */
 class RuleVariants extends JsonObject
 {
     /**
-     * @param int|string          $id   id для отображения в `<option value=`
+     * @param int|string          $id
      * @param string              $text текст для пользователя
      * @param array<string,mixed> $meta дополнительные поля с данными
      */
@@ -101,6 +146,9 @@ class RuleVariants extends JsonObject
 }
 
 
+/**
+ * Базовый класс для правил отбора отелей
+ */
 abstract class Rule extends JsonObject
 {
     public function __construct(
@@ -147,11 +195,15 @@ abstract class Rule extends JsonObject
 
     /**
      * SQL для `getTargetValues`
+     * Запрос должен вернуть множество строк с полями `id`, `text`
+     * Остальные поля будут упакованны как метаданные
      *
-     * @param PDO $conn
-     * @return array<int,mixed> {id, text, ...}
+     * @return string|null Если null, запрос в базу данных не требуется
      */
-    abstract static protected function _getTargetValues(): string;
+    static protected function _getTargetValues(): ?string
+    {
+        return null;
+    }
 
     /**
      * Вернуть все возможные варианты значения
@@ -172,7 +224,9 @@ abstract class Rule extends JsonObject
     }
 
     /**
-     * @return Operator[]
+     * Допустимые операторы
+     *
+     * @return Operator[] непустой массив
      */
     abstract static protected function _getAllowedOperators(): array;
 
@@ -194,6 +248,9 @@ abstract class Rule extends JsonObject
 }
 
 
+/**
+ * Правило `Страна`
+ */
 class CountryRule extends Rule
 {
     /**
@@ -231,7 +288,7 @@ class CountryRule extends Rule
         ;
     }
 
-    protected static function _getTargetValues(): string
+    protected static function _getTargetValues(): ?string
     {
         return "
             SELECT id, name AS text, name AS country_name, id AS country_id
@@ -249,6 +306,9 @@ class CountryRule extends Rule
 }
 
 
+/**
+ * Правило `Город`
+ */
 class CityRule extends Rule
 {
     /**
@@ -298,7 +358,7 @@ class CityRule extends Rule
         ;
     }
 
-    protected static function _getTargetValues(): string
+    protected static function _getTargetValues(): ?string
     {
         return "
             SELECT
@@ -326,6 +386,9 @@ class CityRule extends Rule
 }
 
 
+/**
+ * Правило `Звездность`
+ */
 class StarsRule extends Rule
 {
     /**
@@ -361,11 +424,6 @@ class StarsRule extends Rule
         ;
     }
 
-    protected static function _getTargetValues(): string
-    {
-        return "";
-    }
-
     public static function getTargetValues(\PDO $conn): array
     {
         return [
@@ -389,8 +447,10 @@ class StarsRule extends Rule
 
 
 /**
- * Не совсем понятно, зачем такое правило.
- * Bидимо, чисто чтобы показать, что я умею пользоваться OR в mysql
+ * Правило `Процент`
+ *
+ * ___P.S.___ _Не совсем понятно, зачем такое правило.
+ * Bидимо, чисто чтобы показать, что я умею пользоваться OR в mysql_
  */
 class PercentRule extends Rule
 {
@@ -430,11 +490,6 @@ class PercentRule extends Rule
         ;
     }
 
-    protected static function _getTargetValues(): string
-    {
-        return "";
-    }
-
     public static function getTargetValues(\PDO $conn): array
     {
         return [
@@ -463,6 +518,9 @@ class PercentRule extends Rule
 }
 
 
+/**
+ * Правило `Договор по умолчанию`
+ */
 class DefaultContractRule extends Rule
 {
     /**
@@ -502,11 +560,6 @@ class DefaultContractRule extends Rule
         ;
     }
 
-    protected static function _getTargetValues(): string
-    {
-        return "";
-    }
-
     public static function getTargetValues(\PDO $conn): array
     {
         return [
@@ -524,6 +577,9 @@ class DefaultContractRule extends Rule
 }
 
 
+/**
+ * Правило `Компания`
+ */
 class CompanyRule extends Rule
 {
     /**
@@ -586,6 +642,9 @@ class CompanyRule extends Rule
 }
 
 
+/**
+ * Правило `Белый список`
+ */
 class WhitelistRule extends Rule
 {
     /**
@@ -620,11 +679,6 @@ class WhitelistRule extends Rule
         ;
     }
 
-    protected static function _getTargetValues(): string
-    {
-        return "";
-    }
-
     public static function getTargetValues(\PDO $conn): array
     {
         return [
@@ -642,6 +696,9 @@ class WhitelistRule extends Rule
 }
 
 
+/**
+ * Правило `Черный список`
+ */
 class BlacklistRule extends Rule
 {
     /**
@@ -676,11 +733,6 @@ class BlacklistRule extends Rule
         ;
     }
 
-    protected static function _getTargetValues(): string
-    {
-        return "";
-    }
-
     public static function getTargetValues(\PDO $conn): array
     {
         return [
@@ -698,6 +750,9 @@ class BlacklistRule extends Rule
 }
 
 
+/**
+ * Правило `Список рекомендованных`
+ */
 class RecommendRule extends Rule
 {
     /**
@@ -732,11 +787,6 @@ class RecommendRule extends Rule
         ;
     }
 
-    protected static function _getTargetValues(): string
-    {
-        return "";
-    }
-
     public static function getTargetValues(\PDO $conn): array
     {
         return [
@@ -754,6 +804,7 @@ class RecommendRule extends Rule
 }
 
 
+// ключ должен совпадать с $name правила
 const RULES = [
     'country' => CountryRule::class,
     'city' => CityRule::class,
@@ -767,6 +818,9 @@ const RULES = [
 ];
 
 
+/**
+ * Набор правил
+ */
 class RulesSet extends JsonObject
 {
     /**
@@ -803,9 +857,13 @@ class RulesSet extends JsonObject
         );
     }
 
+    /**
+     * Генерирует запрос для поиска по всем правилам в наборе </br>
+     * Правила объединяются с помощью логического оператора <code>И</code> </br>
+     * Запрос вернет список <code>id</code> отелей
+     */
     public function buildQuery(): string
     {
-        // набор таблиц для FROM можно сделать динамическим, добавив метод getDependencies(): string[]
 
         $sql = "
         SELECT
@@ -814,10 +872,13 @@ class RulesSet extends JsonObject
 
         foreach ($this->rules as $rule) {
             if ($rule->toSqlSelect()) {
+                // Чтобы добавить условие HAVING, правило должно что-то добавить в SELECT
                 $sql .= ", " . $rule->toSqlSelect();
             }
         }
 
+        // набор таблиц для FROM можно сделать динамическим,
+        // добавив метод getDependencies(): string[] в классы \Rule\Rule и \Entity\Entity
         $sql .= "
         FROM
             `hotels`
@@ -852,6 +913,7 @@ class RulesSet extends JsonObject
             $sql .= " WHERE (" . implode(') AND (', $where) . ") ";
         }
 
+        // сначала хотел сделать SELECT DISTINCT, но GROUP BY оказался функциональнее
         $sql .= " GROUP BY id ";
 
         $having = [];
